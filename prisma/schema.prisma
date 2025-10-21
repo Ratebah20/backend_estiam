@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+  ADMIN
+  USER
+}
+
+// Auth
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  nom       String
+  prenom    String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user")
+}
+
+// Métier
+model Client {
+  id        String   @id @default(uuid())
+  adresse   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  projets   Projet[]
+
+  @@map("client")
+}
+
+model Projet {
+  id             String         @id @default(uuid())
+  nom            String
+  clientId       String         @map("client_id")
+  client         Client         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  interventions  Intervention[]
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  @@index([clientId])
+  @@map("projet")
+}
+
+model Salarie {
+  id             String         @id @default(uuid())
+  nom            String
+  prenom         String
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  interventions  Intervention[] @relation("InterventionSalaries")
+
+  @@map("salarie")
+}
+
+model Materiel {
+  id             String         @id @default(uuid())
+  designation    String
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  interventions  Intervention[] @relation("InterventionMateriels")
+
+  @@map("materiel")
+}
+
+model Intervention {
+  id        String     @id @default(uuid())
+  date      DateTime
+  duree     Float // en heures
+  projetId  String     @map("projet_id")
+  projet    Projet     @relation(fields: [projetId], references: [id], onDelete: Cascade)
+  salaries  Salarie[]  @relation("InterventionSalaries")
+  materiels Materiel[] @relation("InterventionMateriels")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@index([projetId])
+  @@index([date])
+  @@map("intervention")
+}

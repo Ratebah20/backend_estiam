@@ -1,0 +1,147 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthResponse {
+  accessToken: String!
+  user: UserResponse!
+}
+
+type Client {
+  adresse: String!
+  createdAt: DateTime!
+  id: ID!
+  updatedAt: DateTime!
+}
+
+input CreateClientInput {
+  adresse: String!
+}
+
+input CreateInterventionInput {
+  date: String!
+  duree: Float!
+  materielIds: [String!]!
+  projetId: String!
+  salarieIds: [String!]!
+}
+
+input CreateMaterielInput {
+  designation: String!
+}
+
+input CreateProjetInput {
+  clientId: String!
+  nom: String!
+}
+
+input CreateSalarieInput {
+  nom: String!
+  prenom: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Intervention {
+  createdAt: DateTime!
+  date: DateTime!
+  duree: Float!
+  id: ID!
+  materiels: [Materiel!]
+  projetId: String!
+  salaries: [Salarie!]
+  updatedAt: DateTime!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Materiel {
+  createdAt: DateTime!
+  designation: String!
+  id: ID!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  createClient(input: CreateClientInput!): Client!
+  createIntervention(input: CreateInterventionInput!): Intervention!
+  createMateriel(input: CreateMaterielInput!): Materiel!
+  createProjet(input: CreateProjetInput!): Projet!
+  createSalarie(input: CreateSalarieInput!): Salarie!
+  deleteClient(id: String!): Boolean!
+  deleteIntervention(id: String!): Boolean!
+  deleteMateriel(id: String!): Boolean!
+  deleteProjet(id: String!): Boolean!
+  deleteSalarie(id: String!): Boolean!
+  login(input: LoginInput!): AuthResponse!
+  register(input: RegisterInput!): AuthResponse!
+  updateClient(adresse: String!, id: String!): Client!
+  updateIntervention(id: String!, input: UpdateInterventionInput!): Intervention!
+  updateMateriel(designation: String!, id: String!): Materiel!
+  updateProjet(id: String!, nom: String!): Projet!
+  updateSalarie(id: String!, nom: String, prenom: String): Salarie!
+}
+
+type Projet {
+  clientId: String!
+  createdAt: DateTime!
+  id: ID!
+  nom: String!
+  tempsRestant: Float
+  tempsTotal: Float
+  updatedAt: DateTime!
+}
+
+type Query {
+  client(id: String!): Client
+  clients: [Client!]!
+  intervention(id: String!): Intervention
+  interventions: [Intervention!]!
+  interventionsAvenir: [Intervention!]!
+  interventionsByProjet(projetId: String!): [Intervention!]!
+  materiel(id: String!): Materiel
+  materiels: [Materiel!]!
+  planningSalarie(salarieId: String!): [Intervention!]!
+  projet(id: String!): Projet
+  projets: [Projet!]!
+  projetsByClient(clientId: String!): [Projet!]!
+  salarie(id: String!): Salarie
+  salaries: [Salarie!]!
+}
+
+input RegisterInput {
+  email: String!
+  nom: String!
+  password: String!
+  prenom: String!
+}
+
+type Salarie {
+  createdAt: DateTime!
+  id: ID!
+  nom: String!
+  prenom: String!
+  updatedAt: DateTime!
+}
+
+input UpdateInterventionInput {
+  date: String
+  duree: Float
+  materielIds: [String!]
+  projetId: String
+  salarieIds: [String!]
+}
+
+type UserResponse {
+  email: String!
+  id: String!
+  nom: String!
+  prenom: String!
+  role: String!
+}
